@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "HHCircleView/HHCircleView.swift"
-            timestampString = "462642477.367863"
+            timestampString = "462647785.609116"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "init#(_:)"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "configure(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
