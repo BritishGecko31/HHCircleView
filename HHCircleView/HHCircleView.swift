@@ -17,16 +17,19 @@ class HHCircleView: UIView {
     // MARK: - IBInspectable
     
     // Common Circle
-    @IBInspectable var angle: Float = 0
+    @IBInspectable var angleStart: CGFloat = 0
+    @IBInspectable var angleEnd: CGFloat = 0
+        
     //@IBInspectable var rotation: Float = 0
     //@IBInspectable var mask: UIImage?
     
     // Progress Circle Appearance
-    @IBInspectable var progressLineWidth: CGFloat = 10
-    @IBInspectable var progressLineColor: UIColor = UIColor.greenColor()
+    @IBInspectable var progressLineWidth: CGFloat = 40
+    @IBInspectable var progressLineColor: UIColor = UIColor.redColor()
     @IBInspectable var progressBorderWidth: CGFloat = 1
     @IBInspectable var progressBorderColor: UIColor = UIColor.greenColor()
     @IBInspectable var progressLineCapStyle: String = "kCGLineCapButt"
+    
     
     // Background Circle Appearance
     //@IBInspectable var backgroundVisibility: Bool = true
@@ -59,37 +62,50 @@ class HHCircleView: UIView {
         super.init(frame: frame)
         configure(frame)
     }
-
+    
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func configure(frame: CGRect) {
-        
-        let radius = min(self.frame.width / 2, self.frame.height / 2)
+        let radius: CGFloat = min(self.frame.width / 2, self.frame.height / 2)
+        let progressLayerFillColor: UIColor = UIColor.clearColor()
         
         progressLayer.bounds = self.bounds
         progressLayer.frame = self.frame
         progressLayer.cornerRadius = radius
-        progressLayer.path = UIBezierPath(arcCenter: CGPoint(x: radius, y: radius),
-            radius: CGFloat((radius - progressBorderWidth) - (progressLineWidth / 2)),
-            startAngle: CGFloat(radians(angle)),
-            endAngle:  CGFloat(-1 * radians(angle)),
-            clockwise: true).CGPath
+        
+        /*
+(self.progressAngle/100.f)*M_PI,
+-(self.progressAngle/100.f)*M_PI-((-self.progressRotationAngle/100.f)*2.f+0.5)*M_PI,
+*/
+
+
+        progressLayer.path = UIBezierPath(
+            arcCenter: CGPoint(x: radius, y: radius),
+            radius: (radius - progressBorderWidth) - (progressLineWidth / 2),
+            startAngle: radians(angleStart),
+            endAngle:  radians(-1 * angleEnd),
+            clockwise: true
+            ).CGPath
         
         progressLayer.borderColor = progressBorderColor.CGColor
         progressLayer.borderWidth = progressBorderWidth
         progressLayer.lineWidth = progressLineWidth
         progressLayer.strokeColor = progressLineColor.CGColor
         progressLayer.lineCap = progressLineCapStyle
+        progressLayer.fillColor = progressLayerFillColor.CGColor
         
         self.layer.addSublayer(progressLayer)
-        self.layoutSubviews()
+       // self.layoutIfNeeded()
     }
     
+    override func layoutSubviews() {
+        configure(self.frame)
+    }
     
     // MARK: - Private
-    func radians(degrees: Float) -> Float {
-        return Float(Double(degrees) / 180.0 * M_PI)
+    func radians(degrees: CGFloat) -> CGFloat {
+        return CGFloat(Double(degrees) / 180.0 * M_PI)
     }
 }
